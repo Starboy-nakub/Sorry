@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ขอโทษนะ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a1c4fd);
+      background-size: 300% 300%;
+      animation: bgMove 10s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      backdrop-filter: blur(15px);
+      background: rgba(255,255,255,0.2);
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      width: 340px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 1s ease;
+      z-index: 2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 { margin-bottom: 10px; }
+    p { line-height: 1.7; }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .yes {
+      background: linear-gradient(45deg, #43e97b, #38f9d7);
+      color: white;
+    }
+
+    .no {
+      background: linear-gradient(45deg, #ff6a6a, #ff3d3d);
+      color: white;
+    }
+
+    /* หัวใจลอย */
+    .heart {
+      position: absolute;
+      color: pink;
+      font-size: 20px;
+      animation: floatUp 4s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    /* popup */
+    #popup {
+      display:none;
+      position:fixed;
+      top:0;left:0;
+      width:100%;height:100%;
+      background:rgba(0,0,0,0.6);
+      justify-content:center;
+      align-items:center;
+      z-index: 3;
+    }
+
+    #popupBox {
+      background:white;
+      padding:30px;
+      border-radius:20px;
+      text-align:center;
+      animation: fadeIn 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>ขอโทษนะ 🥺</h1>
+    <p>
+      ถึง <b>ชื่อเพื่อนของนาย</b><br><br>
+      เรารู้ว่าเราทำให้เธอเสียความรู้สึก  
+      และเราเสียใจกับสิ่งนั้นจริงๆ  
+      <br><br>
+      เธอสำคัญกับเรามากนะ  
+      และเราไม่อยากเสียเธอไปเลย  
+      <br><br>
+      ขออีกโอกาสให้เราได้แก้ตัวได้มั้ย...
+    </p>
+
+    <button class="yes" id="yesBtn">ให้อภัย</button>
+    <button class="no" id="noBtn">ไม่ให้อภัย</button>
+  </div>
+
+  <!-- เสียง -->
+  <audio id="sound" src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"></audio>
+
+  <!-- popup -->
+  <div id="popup">
+    <div id="popupBox">
+      <h2>ขอบคุณนะ 🥺💖</h2>
+      <p>เราจะไม่ทำให้เธอเสียใจอีกแล้ว</p>
+      <button onclick="closePopup()">ปิด</button>
+    </div>
+  </div>
+
+  <script>
+    let yesSize = 16;
+    let noSize = 16;
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const sound = document.getElementById("sound");
+    const popup = document.getElementById("popup");
+
+    noBtn.addEventListener("click", () => {
+      sound.currentTime = 0;
+      sound.play();
+
+      yesSize += 4;
+      noSize -= 2;
+
+      if (noSize < 6) noSize = 6;
+
+      yesBtn.style.fontSize = yesSize + "px";
+      noBtn.style.fontSize = noSize + "px";
+    });
+
+    yesBtn.addEventListener("click", () => {
+      popup.style.display = "flex";
+      launchConfetti();
+    });
+
+    function closePopup() {
+      popup.style.display = "none";
+    }
+
+    // หัวใจลอย
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = "💖";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 4000);
+    }
+
+    setInterval(createHeart, 300);
+
+    // confetti ง่ายๆ
+    function launchConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const c = document.createElement("div");
+        c.style.position = "absolute";
+        c.style.width = "8px";
+        c.style.height = "8px";
+        c.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
+        c.style.top = "50%";
+        c.style.left = "50%";
+        c.style.opacity = 0.8;
+        c.style.transform = "translate(-50%, -50%)";
+        c.style.transition = "all 1s ease";
+
+        document.body.appendChild(c);
+
+        setTimeout(() => {
+          c.style.top = Math.random()*100 + "%";
+          c.style.left = Math.random()*100 + "%";
+        }, 10);
+
+        setTimeout(() => c.remove(), 1000);
+      }
+    }
+  </script>
+
+</body>
+</html>
